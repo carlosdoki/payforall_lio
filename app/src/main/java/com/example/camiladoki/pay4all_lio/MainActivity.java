@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -51,11 +53,29 @@ public class MainActivity extends AppCompatActivity {
         LocationListener mlocListener = new MyLocationListener();
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
 
+        valorText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                if(s.length() != 0)
+                    imgView.setVisibility(View.INVISIBLE);
+            }
+        });
+
         gerarQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 hideSoftKeyboard();
-                imgView.setImageResource(0);
+
                 final TelephonyManager telephony = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                 if (telephony.getPhoneType() == TelephonyManager.PHONE_TYPE_GSM) {
                     final GsmCellLocation location = (GsmCellLocation) telephony.getCellLocation();
@@ -69,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                     bitmap = TextToImageEncode(EditTextValue);
 
                     imgView.setImageBitmap(bitmap);
+                    imgView.setVisibility(View.VISIBLE);
 
                 } catch (WriterException e) {
                     e.printStackTrace();
