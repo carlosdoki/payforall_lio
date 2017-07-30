@@ -1,6 +1,5 @@
 package com.example.camiladoki.pay4all_lio;
 
-import android.provider.Settings.Secure;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -69,15 +68,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 hideSoftKeyboard();
 
-                final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
-
-                final String tmDevice, tmSerial, androidId;
-                tmDevice = "" + tm.getDeviceId();
-                tmSerial = "" + tm.getSimSerialNumber();
-                androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-
-                UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
-                String CID = deviceUuid.toString();
+//                final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+//
+//                final String tmDevice, tmSerial, androidId;
+//                tmDevice = "" + tm.getDeviceId();
+//                tmSerial = "" + tm.getSimSerialNumber();
+//                androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+//
+//                UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+//                String CID = deviceUuid.toString();
+                String CID = "";
 
                 LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
