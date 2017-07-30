@@ -4,43 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/background_light"
     tools:context="com.example.camiladoki.pay4all_lio.MainActivity">
 
     <EditText
         android:id="@+id/valorText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="278dp"
+        android:layout_height="43dp"
         android:layout_marginTop="50dp"
         android:ems="10"
         android:hint="Digite o valor a ser cobrado"
         android:inputType="numberDecimal"
+        android:numeric="decimal"
+        android:textAlignment="center"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintLeft_toLeftOf="@+id/gerarQR"
         app:layout_constraintRight_toRightOf="@+id/gerarQR"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteY="50dp" />
 
     <Button
         android:id="@+id/gerarQR"
-        style="@style/Widget.AppCompat.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Gerar QR Code"
-        app:layout_constraintRight_toRightOf="@+id/imgView"
-        app:layout_constraintLeft_toLeftOf="@+id/imgView"
-        app:layout_constraintHorizontal_bias="0.502"
+        android:layout_width="156dp"
+        android:layout_height="47dp"
         android:layout_marginTop="50dp"
-        app:layout_constraintTop_toBottomOf="@+id/valorText" />
+        android:background="@drawable/mybutton"
+        android:text="Gerar QR Code"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintLeft_toLeftOf="@+id/imgView"
+        app:layout_constraintRight_toRightOf="@+id/imgView"
+        app:layout_constraintTop_toBottomOf="@+id/valorText"
+        tools:layout_editor_absoluteY="144dp" />
 
     <ImageView
         android:id="@+id/imgView"
         android:layout_width="368dp"
         android:layout_height="wrap_content"
-        app:srcCompat="@android:color/background_light"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         android:layout_marginTop="50dp"
-        app:layout_constraintTop_toBottomOf="@+id/gerarQR" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gerarQR"
+        app:srcCompat="@android:color/background_light" />
 
 </android.support.constraint.ConstraintLayout>

@@ -1,5 +1,6 @@
 package com.example.camiladoki.pay4all_lio;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -11,6 +12,7 @@ import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -52,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
         gerarQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                hideSoftKeyboard();
+                imgView.setImageResource(0);
                 final TelephonyManager telephony = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                 if (telephony.getPhoneType() == TelephonyManager.PHONE_TYPE_GSM) {
                     final GsmCellLocation location = (GsmCellLocation) telephony.getCellLocation();
@@ -107,6 +110,26 @@ public class MainActivity extends AppCompatActivity {
         bitmap.setPixels(pixels, 0, 500, 0, 0, bitMatrixWidth, bitMatrixHeight);
         return bitmap;
     }
+
+    /**
+     * Hides the soft keyboard
+     */
+    public void hideSoftKeyboard() {
+        if(getCurrentFocus()!=null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+    }
+
+    /**
+     * Shows the soft keyboard
+     */
+    public void showSoftKeyboard(View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        view.requestFocus();
+        inputMethodManager.showSoftInput(view, 0);
+    }
+
     /* Class My Location Listener */
     public class MyLocationListener implements LocationListener {
 
