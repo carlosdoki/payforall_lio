@@ -1,5 +1,6 @@
 package com.example.camiladoki.pay4all_lio;
 
+import android.provider.Settings.Secure;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,7 +10,6 @@ import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.telephony.gsm.GsmCellLocation;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,12 +18,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,9 +35,7 @@ public class MainActivity extends AppCompatActivity {
     Thread thread;
     public final static int QRcodeWidth = 500;
     Bitmap bitmap;
-    String latitude;
-    String longitude;
-    String CID;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +45,6 @@ public class MainActivity extends AppCompatActivity {
         gerarQR = (Button) findViewById(R.id.gerarQR);
         valorText = (EditText) findViewById(R.id.valorText);
         imgView = (ImageView) findViewById(R.id.imgView);
-
-    /* Use the LocationManager class to obtain GPS locations */
-        LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        LocationListener mlocListener = new MyLocationListener();
-        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
 
         valorText.addTextChangedListener(new TextWatcher() {
 
@@ -76,13 +69,21 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 hideSoftKeyboard();
 
-                final TelephonyManager telephony = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                if (telephony.getPhoneType() == TelephonyManager.PHONE_TYPE_GSM) {
-                    final GsmCellLocation location = (GsmCellLocation) telephony.getCellLocation();
-                    if (location != null) {
-                        CID = String.valueOf(location.getCid());
-                    }
-                }
+                final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+
+                final String tmDevice, tmSerial, androidId;
+                tmDevice = "" + tm.getDeviceId();
+                tmSerial = "" + tm.getSimSerialNumber();
+                androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+                UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+                String CID = deviceUuid.toString();
+
+                LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+                Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                String longitude = String.valueOf(location.getLongitude());
+                String latitude = String.valueOf(location.getLatitude());
+
                 EditTextValue = valorText.getText().toString() + ";lat=" + latitude + ";lon=" + longitude + ";IDFV=" + CID + ";contrato=123;vendedor=1";
 
                 try {
@@ -149,41 +150,5 @@ public class MainActivity extends AppCompatActivity {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         view.requestFocus();
         inputMethodManager.showSoftInput(view, 0);
-    }
-
-    /* Class My Location Listener */
-    public class MyLocationListener implements LocationListener {
-
-        @Override
-        public void onLocationChanged(Location loc) {
-
-            loc.getLatitude();
-            loc.getLongitude();
-
-            //String Text = "My current location is: " +
-            //        "Latitud = " + loc.getLatitude() +
-            //        "Longitud = " + loc.getLongitude();
-
-            latitude = String.valueOf(loc.getLatitude());
-            longitude = String.valueOf(loc.getLongitude());
-            //Toast.makeText(getApplicationContext(), Text, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            //Toast.makeText(getApplicationContext(), "Gps Disabled", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            //Toast.makeText(getApplicationContext(), "Gps Enabled", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-
     }
 }
